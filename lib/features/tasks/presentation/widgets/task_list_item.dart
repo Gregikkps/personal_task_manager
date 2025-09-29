@@ -31,7 +31,11 @@ class TaskListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
-          IconButton(icon: const Icon(Icons.delete), onPressed: onDelete),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: onDelete,
+            color: Colors.red,
+          ),
         ],
       ),
     );

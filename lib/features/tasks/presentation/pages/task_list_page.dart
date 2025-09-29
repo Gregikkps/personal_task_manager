@@ -29,11 +29,11 @@ class _TaskListPageState extends State<TaskListPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check_circle),
-            onPressed: () => context.go('/completed-tasks'),
+            onPressed: () => context.push('/completed-tasks'),
           ),
           IconButton(
             icon: const Icon(Icons.bar_chart),
-            onPressed: () => context.go('/stats'),
+            onPressed: () => context.push('/stats'),
           ),
         ],
       ),
@@ -57,7 +57,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 task: task,
                 onMarkCompleted: (completed) =>
                     vm.markAsCompleted(task.id, completed),
-                onEdit: () => context.go('/edit-task/${task.id}'),
+                onEdit: () => context.push('/edit-task/${task.id}'),
                 onDelete: () => vm.deleteTask(task.id),
               );
             },
@@ -65,7 +65,7 @@ class _TaskListPageState extends State<TaskListPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/add-task'),
+        onPressed: () => context.push('/add-task'),
         child: const Icon(Icons.add),
       ),
     );

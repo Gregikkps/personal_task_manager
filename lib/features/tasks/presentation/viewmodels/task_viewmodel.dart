@@ -4,7 +4,7 @@ import '../../../../core/di/injector.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/services/notification_service.dart';
 import '../../domain/entities/task_entity.dart';
-import '../../domain/repositories/task_repository.dart'; // Załóżmy custom AppException
+import '../../domain/repositories/task_repository.dart';
 
 class TaskViewModel extends ChangeNotifier {
   final TaskRepository _repo = sl<TaskRepository>();
