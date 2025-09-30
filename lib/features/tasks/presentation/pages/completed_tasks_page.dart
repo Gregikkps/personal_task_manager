@@ -40,7 +40,7 @@ class _CompletedTasksPageState extends State<CompletedTasksPage> {
                 task: task,
                 onMarkCompleted: (completed) =>
                     vm.markAsCompleted(task.id, completed),
-                onEdit: () => context.go('/edit-task/${task.id}'),
+                onEdit: () => context.push('/edit-task/${task.id}'),
                 onDelete: () => vm.deleteTask(task.id),
               );
             },
