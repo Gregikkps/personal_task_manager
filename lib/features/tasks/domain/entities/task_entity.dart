@@ -44,7 +44,7 @@ class TaskEntity {
     };
   }
 
-  factory TaskEntity.fromMap(Map<String, dynamic> map) {
+  factory TaskEntity.fromMap(Map<String, Object?> map) {
     return TaskEntity(
       id: map['id'] as String,
       title: map['title'] as String,

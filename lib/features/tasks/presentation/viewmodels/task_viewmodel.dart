@@ -14,19 +14,33 @@ class TaskViewModel extends ChangeNotifier {
   List<TaskEntity> _completedTasks = [];
   bool _isLoading = false;
   String? _errorMessage;
+  bool _initialized = false;
 
   List<TaskEntity> get tasks => _tasks;
   List<TaskEntity> get completedTasks => _completedTasks;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool get initialized => _initialized;
+
+  Future<void> initialize() async {
+    if (_initialized) return;
+    await loadTasks();
+    _initialized = true;
+  }
 
   Future<void> loadTasks() async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
+
     try {
-      _tasks = await _repo.getAllTasks();
-      _completedTasks = await _repo.getAllTasks(completed: true);
+      final results = await Future.wait([
+        _repo.getAllTasks(),
+        _repo.getAllTasks(completed: true),
+      ]);
+
+      _tasks = results[0];
+      _completedTasks = results[1];
     } catch (e) {
       _errorMessage = e is AppException ? e.message : 'Unexpected error';
     } finally {
@@ -49,7 +63,7 @@ class TaskViewModel extends ChangeNotifier {
     );
     try {
       await _repo.addTask(task);
-      await _notificationService.scheduleNotification(id, title, deadline);
+      _notificationService.scheduleNotification(id, title, deadline);
       await loadTasks();
     } catch (e) {
       rethrow;
@@ -60,9 +74,9 @@ class TaskViewModel extends ChangeNotifier {
     try {
       await _repo.updateTask(task);
       if (task.isCompleted) {
-        await _notificationService.cancelNotification(task.id);
+        _notificationService.cancelNotification(task.id);
       } else {
-        await _notificationService.scheduleNotification(
+        _notificationService.scheduleNotification(
           task.id,
           task.title,
           task.deadline,
@@ -77,7 +91,7 @@ class TaskViewModel extends ChangeNotifier {
   Future<void> deleteTask(String id) async {
     try {
       await _repo.deleteTask(id);
-      await _notificationService.cancelNotification(id);
+      _notificationService.cancelNotification(id);
       await loadTasks();
     } catch (e) {
       rethrow;
@@ -88,7 +102,7 @@ class TaskViewModel extends ChangeNotifier {
     try {
       await _repo.markAsCompleted(id, completed);
       if (completed) {
-        await _notificationService.cancelNotification(id);
+        _notificationService.cancelNotification(id);
       }
       await loadTasks();
     } catch (e) {
